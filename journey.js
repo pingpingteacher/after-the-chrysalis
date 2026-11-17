@@ -37,15 +37,15 @@ const issues = {
   '我想再探索':'花十五分鐘讀一個關心的議題，記下一個想繼續追問的問題。'
 };
 const textLimits = {
-  nickname:24, issue:100, action:240, evidence:140, ownStrength:100,
+  nickname:24, selfMessage:300, issue:100, action:240, evidence:140, ownStrength:100,
   resources:140, plannedTime:60, location:60, completionEvidence:140, backup:140
 };
 const moods = ['正在適應新環境','在尋找想走的方向','準備嘗試一件新事','想給自己一點時間'];
 const modeSteps = {live:[0,1,2,3,4,5,10,8,9],explore:[0,1,2,3,4,5,6,7,8,9]};
 const fresh = () => ({
-  flowVersion:5, speciesVersion:2, specimen:null, step:0, mood:'',
+  flowVersion:6, speciesVersion:2, specimen:null, step:0, mood:'',
   mode:'live', liveStep:0, exploreStep:0, liveStarted:false, exploreStarted:false,
-  answers:Array(4).fill(null), nickname:'', issue:'', action:'',
+  answers:Array(4).fill(null), nickname:'', selfMessage:'', issue:'', action:'',
   tipi:Array(10).fill(null), tipiReviewed:false, strengths:[], evidence:'',
   focus:'', practiceStrength:'', ownStrength:'', resources:'', plannedTime:'',
   location:'', completionEvidence:'', backup:''
@@ -102,9 +102,9 @@ try {
 }
 const get = id => document.getElementById(id);
 const stage = get('stage');
-const labels = ['序章','第一章','第二章','第三章','第四章','特質拼圖','大五人格','品格優勢','七天計畫','展翅','分組討論'];
+const labels = ['序章','第一章','第二章','第三章','第四章','特質拼圖','大五人格','品格優勢','我的卡片','展翅','寫給自己'];
 function showStorageStatus() {
-  get('storage-status').textContent=storageMessage || '作答與計畫僅保存在這個瀏覽器，可使用下方按鈕刪除資料並重新開始。';
+  get('storage-status').textContent=storageMessage || '作答與卡片僅保存在這個瀏覽器，可使用下方按鈕刪除資料並重新開始。';
 }
 function save() {
   try {
@@ -125,9 +125,9 @@ function renderForest() {
 }
 function renderGallery() {
   get('butterflies').innerHTML = species.map((butterfly,i) =>
-    `<article class="butterfly-entry">${butterflyArt(i)}<div class="butterfly-caption"><h3>${butterfly.name}${i===3 ? '<small>雌蝶</small>' : ''}</h3><i lang="la">${butterfly.latin}</i><p>${butterfly.note}</p><a class="source" href="${speciesSource(butterfly)}" target="_blank" rel="noopener noreferrer">協會物種介紹 ↗</a><button class="quiet" data-card-species="${i}">帶進我的成長卡 →</button></div></article>`).join('');
+    `<article class="butterfly-entry">${butterflyArt(i)}<div class="butterfly-caption"><h3>${butterfly.name}${i===3 ? '<small>雌蝶</small>' : ''}</h3><i lang="la">${butterfly.latin}</i><p>${butterfly.note}</p><a class="source" href="${speciesSource(butterfly)}" target="_blank" rel="noopener noreferrer">協會物種介紹 ↗</a><button class="quiet" data-card-species="${i}">帶進寫給自己的卡片 →</button></div></article>`).join('');
 }
-const stepNames=['prologue','chapter-1','chapter-2','chapter-3','chapter-4','reflection','personality','strengths','plan','epilogue','discussion'];
+const stepNames=['prologue','chapter-1','chapter-2','chapter-3','chapter-4','reflection','personality','strengths','plan','epilogue','write-to-self'];
 function routeFor(step,mode) {
   return mode==='explore' ? step===0 ? '#explore' : '#explore/'+stepNames[step] : '#'+stepNames[step];
 }
@@ -208,7 +208,7 @@ function renderStrengths() {
     <div class="strength-groups">${strengthGroups.map((group,index)=>`<section><h3>${group}</h3><div class="strength-options">${characterStrengths.filter(strength=>strength.group===index).map(strength=>`<button class="strength-choice" data-strength="${strength.id}" aria-pressed="${state.strengths.includes(strength.id)}"><strong>${strength.name}</strong><span>${strength.example}</span></button>`).join('')}</div></section>`).join('')}</div>
     <div class="fields"><label>哪件生活小事，讓你看見其中一項優勢？（選填）<textarea id="strength-evidence" rows="3" maxlength="140" placeholder="例如，我主動問一位新同學，家鄉有哪些習慣和這裡不同。"></textarea></label></div>
     <details class="source-note"><summary>延伸探索與官方問卷</summary><p>VIA 的 24 項品格優勢可在不同情境中展現與練習。此頁的選擇及生活例子由你自己決定。</p><p>VIA 官方免費問卷需到外部網站註冊並同意其條款，約需 10–15 分鐘。你可以課後完成，再回來調整想練習的優勢。</p><a href="https://www.viacharacter.org/character-strengths" target="_blank" rel="noopener noreferrer">VIA 24 項優勢介紹 ↗</a><br><a href="https://www.viacharacter.org/Survey/Account/Register" target="_blank" rel="noopener noreferrer">前往 VIA 官方問卷 ↗</a></details>
-    <div class="actions">${back(6)}${next(8,'把了解化成行動')}</div>`;
+    <div class="actions">${back(6)}${next(8,'寫一張卡片給自己')}</div>`;
   get('strength-evidence').value = state.evidence;
   updateStrengths();
 }
@@ -230,19 +230,20 @@ function updateSuggestion() {
   get('suggestion').textContent = growthSuggestion();
 }
 function renderGrowthCard() {
-  stage.innerHTML = heading('MY SEVEN-DAY PLAN','我的七天展翅計畫','先寫下三件事，把在乎的議題化成一個 10–30 分鐘能做的小行動。其他細節可以稍後補充，也可以只為自己保存。') +
-    `<div class="actions plan-links"><a class="quiet" href="#discussion">回看 15 分鐘分組引導</a><a class="quiet" href="#explore">課後完整探索</a></div>
+  stage.innerHTML = heading('A CARD TO MYSELF','寫給自己的卡片','把今天的一點理解，寫成想送給自己的話。可以是鼓勵、感謝，也可以是一個還在摸索的想法。依自己的步調填寫，這張卡片可以只留給你。') +
+    `<div class="actions plan-links"><a class="quiet" href="#write-to-self">回看書寫引導</a><a class="quiet" href="#explore">課後完整探索</a></div>
     <div class="fields core-fields">
-    <label><span class="field-title"><b>01</b> 我在乎什麼</span><input id="issue" list="issue-ideas" maxlength="100" placeholder="一個世界、校園或生活議題，例如校園減塑"><datalist id="issue-ideas">${Object.keys(issues).map(issue=>`<option value="${issue}"></option>`).join('')}</datalist></label>
-    <label><span class="field-title"><b>02</b> 我有什麼力量／資源</span><textarea id="ownStrength" rows="2" maxlength="100" placeholder="例如，願意傾聽、同組夥伴、學校資源或 AI"></textarea></label>
-    <label><span class="field-title"><b>03</b> 七天之內我要做的第一步</span><textarea id="action" rows="3" maxlength="240" placeholder="例如，花十五分鐘觀察一次性物品的使用，選一種減少使用"></textarea></label></div>
-    <details class="plan-details"><summary>想讓計畫更完整 <span>時間、地點、證據與其他力量</span></summary>
+    <label><span class="field-title"><b>01</b> 此刻，我想對自己說</span><textarea id="selfMessage" rows="4" maxlength="300" placeholder="親愛的自己，謝謝你願意嘗試。即使還沒有確定方向，也可以一步一步來。"></textarea></label>
+    <label><span class="field-title"><b>02</b> 我看見自己的力量</span><textarea id="ownStrength" rows="2" maxlength="100" placeholder="例如，我願意傾聽，也願意在不熟悉的事情上多試一次。"></textarea></label>
+    <label><span class="field-title"><b>03</b> 接下來，我想為自己做的小事</span><textarea id="action" rows="3" maxlength="240" placeholder="例如，這週留十五分鐘，讀一篇自己好奇的文章，記下一個想追問的問題。"></textarea></label></div>
+    <details class="plan-details"><summary>想多寫一點 <span>在乎的事、行動細節與其他力量</span></summary>
     <div class="fields">
-    <label>可運用資源／AI 或夥伴（選填）<textarea id="resources" rows="2" maxlength="140" placeholder="例如，同組夥伴、學校國際處、用 AI 練習英文"></textarea></label>
+    <label>我在乎的事（選填）<input id="issue" list="issue-ideas" maxlength="100" placeholder="例如，一個關心的議題，或最近想了解的事情"><datalist id="issue-ideas">${Object.keys(issues).map(issue=>`<option value="${issue}"></option>`).join('')}</datalist></label>
+    <label>我可以運用的資源（選填）<textarea id="resources" rows="2" maxlength="140" placeholder="例如，學校圖書館、信任的人，或用 AI 協助整理想法"></textarea></label>
     <label>預定日期或時間（選填）<input id="plannedTime" maxlength="60" placeholder="例如，11 月 20 日午休，花 15 分鐘"></label>
-    <label>預定地點（選填）<input id="location" maxlength="60" placeholder="例如，宿舍、圖書館或線上討論"></label>
+    <label>預定地點（選填）<input id="location" maxlength="60" placeholder="例如，宿舍、圖書館或一個能安靜思考的角落"></label>
     <label>完成證據（選填）<textarea id="completionEvidence" rows="2" maxlength="140" placeholder="例如，一份觀察紀錄、完成一次訪談、拍下嘗試的成果"></textarea></label>
-    <label>遇到阻礙時的備案（選填）<textarea id="backup" rows="2" maxlength="140" placeholder="例如，約不到夥伴時，先自己觀察十分鐘"></textarea></label></div>
+    <label>遇到阻礙時的備案（選填）<textarea id="backup" rows="2" maxlength="140" placeholder="例如，如果時間不夠，先花五分鐘做一個更小的嘗試"></textarea></label></div>
     <div class="source-note exploration-options"><h3>帶入已做過的探索（選填）</h3>
     <p><a href="#explore/personality">大五人格簡短自評</a> · <a href="#explore/strengths">VIA 品格優勢自選</a>。都可留待課後完成，這裡的選擇不會自動改寫你的行動。</p>
     <p>已自選的 VIA 優勢　${selectedStrengths().map(strength=>strength.name).join('、') || '可在課後探索時選擇'}</p>
@@ -251,8 +252,8 @@ function renderGrowthCard() {
     <div class="feedback"><strong>給這次練習的一個起點</strong><p id="suggestion"></p><button class="quiet" id="use-suggestion">用這個建議起草小行動</button></div></div>
     <div class="fields"><label>暱稱（選填）<input id="nickname" maxlength="24" autocomplete="off"></label>
     <label>卡片蝶種<select id="card-species">${species.map((butterfly,i)=>`<option value="${i}">${butterfly.name}${i===3?'（雌蝶插畫）':''}</option>`).join('')}</select></label></div></details>
-    <p class="notice">所有欄位皆可選填，完成自評與優勢自選並非保存卡片的門檻。四種紫斑蝶只決定插畫，不對應人格類型或能力高低。</p>
-    <canvas class="card" id="card" width="880" height="1500" aria-label="七天展翅計畫卡片預覽"></canvas>
+    <p class="notice">所有欄位皆可選填，寫一句也可以。內容只保存在這個瀏覽器，你可以自行決定是否分享。完成自評與優勢自選並非保存卡片的門檻；四種紫斑蝶只決定插畫，不對應人格類型或能力高低。</p>
+    <canvas class="card" id="card" width="880" height="1500" aria-label="寫給自己的卡片預覽"></canvas>
     <div class="actions"><a class="button" id="download" aria-disabled="true" tabindex="-1">下載 PNG</a><button class="secondary" id="copy">複製文字</button>${next(9,'走向終章')}</div><p class="notice" id="notice" role="status"></p>`;
   for (const key of Object.keys(textLimits)) {
     const field=get(key);
@@ -264,14 +265,13 @@ function renderGrowthCard() {
   updateSuggestion();
   drawCard();
 }
-function renderDiscussion() {
-  stage.innerHTML = heading('DISCUSS · PLAN · TAKE FLIGHT','分組討論／七天展翅計畫','聽完兩位學生的分享，現在把注意力帶回自己。3–4 人一組，用 15 分鐘找出七天內能做的第一步。') +
-    `<blockquote class="discussion-core">理想是核心，身分是槓桿。<br>行動讓人踏出第一步，學習、AI 與合作讓人走得更遠。</blockquote>
-    <div class="discussion-prompts"><h3>帶著三個問題討論</h3><ol><li>我在乎的世界、社會或校園議題是什麼？</li><li>我已經有哪些優勢？能運用哪些 AI、夥伴或學校資源？</li><li>我可以找誰合作？哪裡可能卡住？七天內的第一步可以怎麼做？</li></ol></div>
-    <ol class="discussion-flow"><li><strong>2 分鐘 · 獨立思考</strong><p>選一個在乎的議題，先寫下自己的想法。</p></li><li><strong>6 分鐘 · 輪流分享</strong><p>說說自己的優勢與可運用資源，聽聽夥伴不同的選擇。</p></li><li><strong>4 分鐘 · 夥伴建議</strong><p>一起找出合作對象、可能阻礙，以及能做得更小的備案。</p></li><li><strong>3 分鐘 · 個人修訂</strong><p>寫清楚何時、何地、做什麼，以及如何知道完成。</p></li></ol>
-    <p class="notice">依自己的意願分享，也可以只記錄或聆聽。測驗分數、家庭與私人經歷可留給自己。</p>
-    <details class="source-note"><summary>安排七天的節奏</summary><p>D1–D2 確認議題 · D3–D4 找資源 · D5–D6 行動 · D7 回顧修正。可依實際狀況調整每天的安排。</p></details>
-    <div class="actions">${next(8,'填寫七天展翅計畫')}<a class="button secondary" href="#explore">課後完整探索</a></div>`;
+function renderSelfWriting() {
+  stage.innerHTML = heading('A MOMENT FOR MYSELF','留一點時間，寫給自己','聽完分享，把注意力帶回自己。回想今天讓你停下來的一句話、一個念頭，或一個看見自己的時刻。') +
+    `<blockquote class="discussion-core">每一種成長，都有自己的節奏。<br>把今天的一點理解，留給未來的自己。</blockquote>
+    <div class="discussion-prompts"><h3>可以從這三句話開始</h3><ol><li>此刻，我想對自己說……</li><li>我看見自己已經擁有的力量是……</li><li>接下來，我想為自己做的一件小事是……</li></ol></div>
+    <ol class="discussion-flow"><li><strong>安靜寫下</strong><p>用自己的話寫，不必追求完整或漂亮。只留下一句現在最想說的話，也很好。</p></li><li><strong>留給自己</strong><p>完成後保存卡片，過幾天再讀一次。看看自己的感受，也可以回來補上新的想法。</p></li></ol>
+    <p class="notice">依自己的步調獨自完成，內容可以只留給自己。所有欄位皆可選填。</p>
+    <div class="actions">${next(8,'開始寫給自己的卡片')}<a class="button secondary" href="#explore">課後完整探索</a></div>`;
 }
 const directRoutes = new Map();
 for (const mode of ['live','explore']) {
@@ -280,6 +280,8 @@ for (const mode of ['live','explore']) {
 directRoutes.set('#forest',{mode:'live',step:0,target:'forest',remember:false});
 directRoutes.set('#home',{mode:'live',step:0,target:'home',remember:false});
 directRoutes.set('#wings',{mode:null,step:null,target:'wings',remember:false});
+// Keep previously shared links usable after changing the classroom activity.
+directRoutes.set('#discussion',{mode:'live',step:10,target:'journey',remember:true});
 function resolveRoute(hash) {
   if (hash==='#resume-live' || hash==='#resume-explore') {
     const mode=hash==='#resume-live'?'live':'explore';
@@ -328,7 +330,7 @@ function render() {
       `<div class="tags">${result.words.map(word=>`<span>${word}</span>`).join('')}</div><p>${result.description}</p>
       <div class="feedback"><strong>可以試試</strong><p>${result.tip}</p></div>
       <p class="notice">這次情境中的選擇傾向；不是心理診斷或正式人格量表。觀察、思考、傾聽與實作，都能成為行動的起點。</p>
-      ${state.mode==='live' ? `<aside class="sharing-pause"><p class="eyebrow">先把手機放下</p><h3>聽見別人的選擇，<br>再回到自己的下一步。</h3><p>接下來是兩位同學的分享。先抬頭聆聽，等講者提示後再開始討論；你的選擇會留在這裡。</p></aside><div class="actions reflection-actions">${next(10,'聽完兩位學生分享，開始分組討論')}${next(8,'直接寫七天計畫',true)}${back(4)}</div>` : `<div class="actions">${back(4)}${next(6,'從大五人格認識自己')}${next(8,'回到七天計畫',true)}</div>`}`;
+      ${state.mode==='live' ? `<aside class="sharing-pause"><p class="eyebrow">先把手機放下</p><h3>聽見別人的選擇，<br>再回到自己的下一步。</h3><p>接下來是兩位同學的分享。先抬頭聆聽，等講者提示後，再安靜寫一張卡片給自己；你的選擇會留在這裡。</p></aside><div class="actions reflection-actions">${next(10,'聽完分享，留一點時間給自己')}${next(8,'直接寫給自己',true)}${back(4)}</div>` : `<div class="actions">${back(4)}${next(6,'從大五人格認識自己')}${next(8,'回到我的卡片',true)}</div>`}`;
   } else if (state.step === 6) {
     renderPersonality();
   } else if (state.step === 7) {
@@ -336,10 +338,10 @@ function render() {
   } else if (state.step === 8) {
     renderGrowthCard();
   } else if (state.step === 10) {
-    renderDiscussion();
+    renderSelfWriting();
   } else {
     stage.innerHTML = heading('EPILOGUE','展翅','化蛹之後，我們不一定飛向相同的地方。每一次選擇，都可能讓我們更接近自己想成為的樣子。')+
-      `<div class="final-butterfly">${butterflyArt(state.specimen ?? 1)}<p>${species[state.specimen ?? 1].name}</p></div><h3>I grow in my own way.</h3><p class="notice">把七天的小行動留給自己，也可以課後再回來認識更多自己的力量。</p><div class="actions"><a class="button secondary" href="#wings">遇見四種紫斑蝶 ↓</a>${back(8)}<a class="button" href="#explore">課後完整探索</a><a class="button secondary" href="#forest">回到森林</a></div>`;
+      `<div class="final-butterfly">${butterflyArt(state.specimen ?? 1)}<p>${species[state.specimen ?? 1].name}</p></div><h3>I grow in my own way.</h3><p class="notice">把這張卡片留給自己。過幾天再讀一次，也可以課後回來認識更多自己的力量。</p><div class="actions"><a class="button secondary" href="#wings">遇見四種紫斑蝶 ↓</a>${back(8)}<a class="button" href="#explore">課後完整探索</a><a class="button secondary" href="#forest">回到森林</a></div>`;
   }
 }
 function showFeedback() {
@@ -375,11 +377,19 @@ async function drawCard() {
     return y+size*1.5;
   }
   line('AFTER THE CHRYSALIS',119,23);
-  line('我的展翅成長卡',206,55,450,'serif');
-  const nicknameEnd=line(state.nickname || 'MY GROWTH WINGS',258,23,430,'serif');
+  line('寫給自己的卡片',206,55,450,'serif');
+  const nicknameEnd=line(state.nickname || '給正在成長的自己',258,23,430,'serif');
   const speciesY=Math.max(310,nicknameEnd+8);
   line(butterfly.name+(index===3?' · 雌蝶':''),speciesY,21,430,'serif');
   let y=Math.max(395,speciesY+65);
+  y=line('此刻，我想對自己說',y,23);
+  y=line(state.selfMessage.trim() || '留下一句想送給自己的話。',y,29)+24;
+  if (state.ownStrength.trim()) {
+    y=line('我看見自己的力量',y,23);
+    y=line(state.ownStrength,y,29)+20;
+  }
+  y=line('接下來，我想為自己做的小事',y,23);
+  y=line(state.action.trim() || '寫下一件願意為自己試試的小事。',y,29)+25;
   if (result.words.length) {
     y=line('在故事裡，我選擇了',y,23);
     y=line(result.words.join(' × '),y,29)+24;
@@ -400,19 +410,17 @@ async function drawCard() {
     y=line('我看見優勢的一件小事',y,23);
     y=line(state.evidence,y,27)+20;
   }
-  if (state.ownStrength.trim()) {
-    y=line('我的力量',y,23);
-    y=line(state.ownStrength,y,29)+20;
-  }
   const dimension=personalityDimensions.find(item=>item.id===state.focus);
   if (dimension) {
     y=line('我的練習方向 · '+dimension.name,y,23);
     y=line(personalityPractice(state.tipi,dimension),y,27)+20;
   }
-  y=line('我關心的議題',y,23);
-  y=line(state.issue || '我想再探索',y,29)+20;
+  if (state.issue.trim()) {
+    y=line('我在乎的事',y,23);
+    y=line(state.issue,y,29)+20;
+  }
   if (state.resources.trim()) {
-    y=line('可運用資源／AI 或夥伴',y,23);
+    y=line('我可以運用的資源',y,23);
     y=line(state.resources,y,27)+20;
   }
   if (state.plannedTime.trim()) {
@@ -423,8 +431,6 @@ async function drawCard() {
     y=line('預定地點',y,23);
     y=line(state.location,y,27)+20;
   }
-  y=line('未來七天，我想……',y,23);
-  y=line(state.action.trim() || '寫下一件可以實踐的小事',y,29)+25;
   if (state.completionEvidence.trim()) {
     y=line('完成證據',y,23);
     y=line(state.completionEvidence,y,27)+20;
@@ -454,7 +460,7 @@ async function drawCard() {
   try {
     if (!ready) throw new Error('Artwork not loaded');
     download.href=canvas.toDataURL('image/png');
-    download.download='我的展翅成長卡_'+butterfly.name+'.png';
+    download.download='寫給自己的卡片_'+butterfly.name+'.png';
     download.setAttribute('aria-disabled','false');
     download.tabIndex=0;
     get('notice').textContent='';
@@ -479,7 +485,7 @@ get('reset').addEventListener('click',()=>{
   state=fresh();
   try {
     localStorage.removeItem(storageKey);
-    storageMessage='已刪除此瀏覽器的作答與計畫。';
+    storageMessage='已刪除此瀏覽器的作答與卡片內容。';
   } catch {
     storageMessage='目前畫面已重設，瀏覽器儲存紀錄仍需透過網站資料設定清除。';
   }
@@ -573,7 +579,7 @@ get('journey').addEventListener('click',async event=>{
     return;
   }
   if (button.id==='use-suggestion') {
-    if (state.action.trim() && !confirm('要用這個建議取代目前寫好的七天小行動嗎？其他內容會保留。')) return;
+    if (state.action.trim() && !confirm('要用這個建議取代目前寫好的小行動嗎？其他內容會保留。')) return;
     state.action=growthSuggestion();
     get('action').value=state.action;
     drawCard();
@@ -584,13 +590,14 @@ get('journey').addEventListener('click',async event=>{
       const score=tipiScore(state.tipi,dimension);
       return dimension.name+'　'+(score===null?'待完成':score.toFixed(1)+'/7');
     }).join('、');
-    const planningFields=[['我的力量',state.ownStrength],['可運用資源／AI 或夥伴',state.resources],['預定日期或時間',state.plannedTime],['預定地點',state.location],['完成證據',state.completionEvidence],['遇到阻礙時的備案',state.backup]];
-    const message=['我的七天展翅計畫',state.nickname,species[state.specimen ?? 1].name,result.words.length ? '故事選擇　'+result.words.join(' × ') : '',state.tipi.some(value=>value!==null) ? '大五人格 TIPI 簡短自評　'+scores : '',state.strengths.length ? 'VIA 自選優勢　'+selectedStrengths().map(strength=>strength.name).join('、') : '',state.evidence,state.focus ? personalityPractice(state.tipi,personalityDimensions.find(dimension=>dimension.id===state.focus)) : '',state.issue,state.action,...planningFields.filter(([,value])=>value.trim()).map(([label,value])=>label+'　'+value),'I grow in my own way.'].filter(Boolean).join('\n');
+    const personalFields=[['此刻，我想對自己說',state.selfMessage],['我看見自己的力量',state.ownStrength],['接下來，我想為自己做的小事',state.action]];
+    const planningFields=[['我在乎的事',state.issue],['我可以運用的資源',state.resources],['預定日期或時間',state.plannedTime],['預定地點',state.location],['完成證據',state.completionEvidence],['遇到阻礙時的備案',state.backup]];
+    const message=['寫給自己的卡片',state.nickname || '給正在成長的自己',species[state.specimen ?? 1].name,...personalFields.filter(([,value])=>value.trim()).map(([label,value])=>label+'\n'+value),result.words.length ? '故事選擇　'+result.words.join(' × ') : '',state.tipi.some(value=>value!==null) ? '大五人格 TIPI 簡短自評　'+scores : '',state.strengths.length ? 'VIA 自選優勢　'+selectedStrengths().map(strength=>strength.name).join('、') : '',state.evidence,state.focus ? personalityPractice(state.tipi,personalityDimensions.find(dimension=>dimension.id===state.focus)) : '',...planningFields.filter(([,value])=>value.trim()).map(([label,value])=>label+'　'+value),'I grow in my own way.'].filter(Boolean).join('\n');
     try {
       await navigator.clipboard.writeText(message);
-      if (get('notice')) get('notice').textContent='已複製成長卡文字。';
+      if (get('notice')) get('notice').textContent='已複製寫給自己的卡片文字。';
     } catch {
-      if (get('notice')) get('notice').textContent='瀏覽器無法存取剪貼簿，可下載圖片或截圖保留成長卡。';
+      if (get('notice')) get('notice').textContent='瀏覽器無法存取剪貼簿，可下載圖片或截圖保留卡片。';
     }
   }
   save();
