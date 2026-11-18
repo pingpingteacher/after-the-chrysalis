@@ -5,21 +5,22 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="從紫斑蝶旅程出發，寫一張給自己的卡片，留下想對自己說的話、看見的力量與下一個小行動。課後可透過大五人格與 VIA 品格優勢繼續認識自己。">
+<meta name="description" content="從教師、母親到海洋物理博士生，從臺灣珊瑚到國際交流：走過四段人生故事，探索六個國際視野觀點，寫下自己與世界連結的第一步。">
 <title>化蛹之後｜長成自己的樣子</title>
-<link rel="stylesheet" href="style.css">
-<script src="self-discovery.js" defer></script>
-<script src="journey.js?v=20261117-self-card" defer></script>
+<link rel="stylesheet" href="style.css?v=20261118-bilingual">
+<script src="app-zh.js?v=20261118-bilingual" defer></script>
+<script src="app-en.js?v=20261118-bilingual" defer></script>
+<script src="language.js?v=20261118-bilingual" defer></script>
 </head>
 <body>
-<header class="top"><a class="brand" href="#home"><span aria-hidden="true">✿</span> 化蛹之後</a><nav aria-label="主要導覽"><a href="#forest">森林入口</a><a href="#write-to-self">寫給自己</a><a href="#plan">我的卡片</a><a href="#explore">課後探索</a></nav></header>
+<header class="top"><a class="brand" href="#home"><span aria-hidden="true">✿</span> 化蛹之後</a><nav aria-label="主要導覽"><a href="#life-story">人生與世界</a><a href="#forest">森林入口</a><a href="#write-to-self">寫給自己</a><a href="#plan">我的卡片</a><a href="#explore">課後探索</a></nav><button id="language-toggle" class="language-toggle" type="button" lang="en" aria-label="Switch to English">English</button></header>
 <main id="home">
 <section class="hero" aria-labelledby="title">
 <span class="sr-only">圓翅紫斑蝶振翅飛舞於森林中的水彩插畫。</span>
 <div class="hero-copy">
 <p class="eyebrow"><span></span> AFTER THE CHRYSALIS</p>
 <h1 id="title">化蛹之後<span>長成自己的樣子</span></h1>
-<p class="intro">每一個蛹，看起來都不一樣。<br>每一種成長，也有自己的節奏。</p>
+<p class="intro">從生活的土地出發，和世界慢慢連結。<br>每一種成長，都有自己的節奏。</p>
 <div class="hero-actions"><a class="button" href="#forest">現場跟著演講走 <span aria-hidden="true">→</span></a><a class="button secondary" href="#explore">課後完整探索</a></div>
 <p class="entry-note">現場跟著講者提示走，自我探索可以留待課後。</p>
 <div class="resume-links"><a id="resume-live" href="#resume-live" hidden>繼續上次現場進度</a><a id="resume-explore" href="#resume-explore" hidden>繼續上次課後探索</a></div>
@@ -27,6 +28,13 @@
 </div>
 </section>
 <aside class="memory wrap" aria-label="講者的記憶"><p class="eyebrow">一隻蝴蝶，一段記憶</p><blockquote>「我記得，第一次到內湖高中面試時，<br>遇見的就是圓翅紫斑蝶。」</blockquote><p>—— 講者的回憶</p></aside>
+<section class="world-intro wrap" id="life-story" aria-labelledby="life-story-title">
+<p class="eyebrow">A LIFE OF LEARNING · A WORLD OF CONNECTIONS</p>
+<div class="world-intro-columns"><div><h2 id="life-story-title">身分一直改變，<br>學習一直持續。</h2><p>我曾是幼稚園教師、國中與高中教師，也是一位母親。四十多歲，我重返大學，成為臺大海洋所攻讀海洋物理博士的學生。</p><p>從螢火蟲保育、臺灣海岸的珊瑚調查，到國際海洋教育交流，我一直在學習理解世界，也希望讓學生有能力探索世界。</p></div><blockquote>「長成自己的模樣，不是只為了找到自己的位置，而是找到自己與世界的連結。」<cite>—— 講者想留給你的話</cite></blockquote></div>
+<ol class="life-route"><li><a href="#chapter-1"><span>01 · 起點</span><strong>從在地看見世界</strong><p>螢火蟲、臺灣珊瑚與公民科學</p></a></li><li><a href="#chapter-2"><span>02 · 探索</span><strong>在交流中理解差異</strong><p>英文還在學，對話也能開始</p></a></li><li><a href="#chapter-3"><span>03 · 蛻變</span><strong>重新成為學生</strong><p>在不同人生階段繼續學習</p></a></li><li><a href="#chapter-4"><span>04 · 連結世界</span><strong>用自己的能力參與</strong><p>跨域提問、自主判斷與小行動</p></a></li></ol>
+<details class="speaker-opening"><summary>讀講者的開場：我們可以一邊學習，一邊走向世界</summary><p>各位同學，今天這堂課叫做「教育的國際視野」。看起來，我好像不斷在改變自己的身分，但其實我一直在做同一件事：學習如何理解這個世界，也希望讓更多學生有能力探索這個世界。</p><p>我從臺灣的教育現場出發，從螢火蟲、海洋環境、科學研究，一步步接觸不同國家的人，也開始參與國際交流。國際視野不一定從出國開始，它也可以從你對身邊一件事情的好奇開始。</p><p>走向世界不需要先變成一個完美的人。我們可以在學習、犯錯與合作中慢慢成長。重要的是，找到自己在乎的事情，並開始探索自己能做些什麼。</p></details>
+<p class="inclusive-note">行動力，也可以是用適合自己的方式開始理解世界。先觀察、閱讀、提問，或留一點時間想清楚，都有意義。</p>
+</section>
 <section id="forest" class="forest wrap" aria-labelledby="forest-title">
 <div class="section-head"><div><p class="eyebrow"><span></span> PROLOGUE</p><h2 id="forest-title">森林裡的紫斑蝶蛹</h2><p>選一枚蛹，陪你走過旅程。最後，牠會在寫給自己的卡片上展翅。</p></div><button class="quiet" id="science">蛹和繭有什麼不同？ <span aria-hidden="true">↗</span></button></div>
 <div class="specimens" id="specimens"></div>
@@ -42,7 +50,10 @@
 <p>遇見臺灣的四種紫斑蝶，也記住屬於自己的成長節奏。</p>
 <div class="butterfly-gallery" id="butterflies"></div>
 <p class="art-note">水彩插畫依生態照片描繪，斑紋與色澤經過藝術化呈現。蝶蛹會隨發育階段、個體與光線呈現不同外觀。<a href="https://purplecrow.org.tw/secret.php" target="_blank" rel="noopener noreferrer">台灣紫斑蝶生態保育協會</a> · <a href="https://252k.org.tw/path_family.html" target="_blank" rel="noopener noreferrer">形態參考與辨識資料｜高公局紫斑蝶家族</a></p>
+<p class="art-note">英文俗名可能因地區而異，請搭配臺灣亞種的學名辨識。<a href="https://www.nparks.gov.sg/nature/species-list/lepidoptera-butterflies" target="_blank" rel="noopener noreferrer">英文名稱參考：NParks</a> · <a href="https://kmweb.moa.gov.tw/theme_data.php?id=61&amp;theme=butterfly_illustration" target="_blank" rel="noopener noreferrer">圓翅紫斑蝶學名參考：農業部</a></p>
 </section>
 </main>
 <footer class="wrap"><span>✿　化蛹之後</span><small id="storage-status" role="status">作答與卡片僅保存在這個瀏覽器，可隨時刪除。</small><button class="quiet" id="reset">刪除資料並重新開始</button><details class="privacy-note"><summary>資料如何保存</summary><p>本網站在你的裝置瀏覽器內產生寫給自己的卡片與保存進度。填寫的內容會留在本機；清除瀏覽器的網站資料，也會移除這份紀錄。按「刪除資料並重新開始」可刪除這個網站儲存的作答與卡片內容。</p><p>資源欄位用來記錄你想運用的人、學校資源或工具。全程由瀏覽器處理你的作答，對外連線僅用於載入網站檔案及你主動開啟的延伸資料連結。卡片可以只留給自己；是否分享，由你決定。若使用共用裝置，離開前請刪除資料並重新開始。</p></details></footer>
 <dialog id="science-dialog"><h2>蛹和繭有什麼不同？</h2><p>蛹是幼蟲到成蟲之間的發育階段。許多蛾類會在化蛹前吐絲，形成包在蛹外面的繭。蝶蛹通常外露，有的從尾端倒掛，有的靠一條絲帶固定在枝條上。</p><p>這四種紫斑蝶的蛹以尾端附著、倒掛在葉片或枝條下。小紫斑蝶有綠色型與銀色型蛹，這裡選用綠色型的水彩示意。</p><p><a href="https://monarchjointventure.org/monarch-biology/butterfly-systematics" target="_blank" rel="noopener noreferrer">Monarch Joint Venture｜蝶與蛾</a></p><form method="dialog"><button>回到森林</button></form></dialog>
+</body>
+</html>
